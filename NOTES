@@ -1,0 +1,129 @@
+Include SDL
+
+SDL Uses OG main so
+
+```
+int main(int argc, char **argv);
+```
+
+To Start SDL Call SDL_Init(int flags);
+flags like
+SDL_INIT_VIDEO
+SDL_INIT_AUDIO
+
+To Stop SDL Call SDL_Quit();
+
+
+To Get A window running with a basic Quit
+
+```
+
+#include <stdio.h>
+#include "SDL2/SDL.h"
+
+#define SCR_W 1600
+#define SCR_H 900
+
+static SDL_Window *window = NULL;
+static SDL_Renderer *renderer = NULL;
+
+int main(int argc, char **argv){
+    // FIXME: Error Handling
+    SDL_Init(SDL_INIT_VIDEO);
+    // FIXME: Error Handling
+    window = SDL_CreateWindow("Checkers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCR_W, SCR_H, 0);
+    // FIXME: Error Handling
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
+    SDL_bool is_running = SDL_TRUE;
+    while(is_running){
+        SDL_Event e;
+        while(SDL_PollEvent(&e)){
+            if(e.type == SDL_QUIT){
+                is_running = SDL_FALSE;
+            }
+        }
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+    }
+    SDL_Quit();
+    return 0;
+}
+
+```
+
+Dont forget to add error handling for SDL initialisation
+
+Method to do error handling
+Uses SimpleMessageBox which can be used without full initialisation of the window
+
+```
+
+static void panic_and_abort(const char *title, const char *message){
+    fprintf(stderr, "PANIC: %s ... %s\n", title, message);
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, window);
+    SDL_Quit();
+    exit(1);
+}
+
+```
+
+```
+int main(int argc, char **argv){
+
+    if(SDL_Init(SDL_INIT_VIDEO) != 0){
+        panic_and_abort("SDL_Init Failed!", SDL_GetError());
+    }
+
+    window = SDL_CreateWindow("Checkers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCR_W, SCR_H, 0);
+    if(window == NULL){
+        panic_and_abort("SDL_CreateWindow Failed!", SDL_GetError());
+    }
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
+    if(renderer == NULL){
+        panic_and_abort("SDL_CreateWindow Failed!", SDL_GetError());
+    }
+
+    ...
+
+    //While loop
+
+    ...
+
+    SDL_Quit();
+    return 0;
+}
+
+```
+
+
+Fill a rect on a screen
+
+Required:
+SDL_Rect
+SDL_Renderer
+
+1. Define a rect
+2. Set Draw Color
+3. Call Draw/Fill Rect
+
+```
+
+SDL_Rect tile = { 0, 0, 100, 100};
+SDL_SetRenderDrawColor(renderer, 0x40, 0x40, 0x40, 0xFF);
+SDL_RenderFillRect(renderer, &tile);
+
+```
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,1 +1,1 @@
-gcc -o protome main.c `sdl2-config --cflags --libs` -lSDL2_ttf
+gcc -ggdb -o protome main.c `sdl2-config --cflags --libs` -lSDL2_ttf
